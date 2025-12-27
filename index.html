@@ -1,11 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Mi primera página</title>
+  <title>Taller COSTALES</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #0f2027;
+      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      color: #fff;
+    }
+    header {
+      background: #1abc9c;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    nav {
+      background: #16a085;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    section {
+      padding: 40px;
+      text-align: center;
+    }
+    section h2 {
+      color: #1abc9c;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #2c3e50;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #f39c12;
+    }
+    footer {
+      background: #1abc9c;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+  </style>
 </head>
 <body>
-  <h1>¡Hola mundo!</h1>
-  <p>Esta es mi primera página publicada en GitHub Pages.</p>
+
+  <header>
+    <h1>⚡ Taller COSTALES ⚡</h1>
+    <p>Reparación y optimización de vehículos eléctricos y baterías de litio/LiFePO₄</p>
+  </header>
+
+  <nav>
+    <a href="#servicios">Servicios</a>
+    <a href="#contacto">Contacto</a>
+    <a href="#nosotros">Nosotros</a>
+  </nav>
+
+  <section id="servicios">
+    <h2>🔧 Nuestros Servicios</h2>
+    <div class="card">
+      <h3>Reparación de Vehículos Eléctricos</h3>
+      <p>Diagnóstico completo, reparación de motores, controladores y sistemas de carga.</p>
+    </div>
+    <div class="card">
+      <h3>Reparación de Baterías de Litio y LiFePO₄</h3>
+      <p>Balanceo de celdas, reemplazo de módulos, adaptación de BMS y optimización de rendimiento.</p>
+    </div>
+    <div class="card">
+      <h3>Consultoría Técnica</h3>
+      <p>Asesoría en proyectos de conversión, mantenimiento preventivo y capacitación comunitaria.</p>
+    </div>
+  </section>
+
+  <section id="nosotros">
+    <h2>👨‍🔧 Sobre Taller COSTALES</h2>
+    <p>Somos un equipo apasionado por la innovación y la energía limpia. 
+       Nuestro objetivo es extender la vida útil de tus baterías y vehículos eléctricos 
+       con soluciones prácticas y seguras.</p>
+  </section>
+
+  <section id="contacto">
+    <h2>📞 Contáctanos</h2>
+    <p>Email: contacto@tallercostales.com</p>
+    <p>Teléfono: +53 555-12345</p>
+    <p>Dirección: Calle Principal #123, Güines, Mayabeque</p>
+  </section>
+
+  <footer>
+    <p>© 2025 Taller COSTALES | Energía limpia para un futuro mejor</p>
+  </footer>
+
 </body>
 </html>
