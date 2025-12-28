@@ -2,112 +2,274 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Taller COSTALES</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
       margin: 0;
-      background: #0f2027;
-      background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      display: flex;
+      overflow-x: hidden; /* evita scroll lateral */
+    }
+
+    /* Botón de menú */
+    #toggleMenu, #musicBtn {
+      position: fixed;
+      background: #2a5298;
       color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 1100;
+      transition: background 0.3s;
     }
-    header {
-      background: #1abc9c;
-      padding: 20px;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
-    }
+    #toggleMenu { top: 20px; left: 20px; }
+    #musicBtn { bottom: 20px; left: 20px; }
+    #toggleMenu:hover, #musicBtn:hover { background: #ffdd57; color: #111; }
+
+    /* Menú vertical */
     nav {
-      background: #16a085;
-      padding: 10px;
-      text-align: center;
+      background: #1e3c72;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 1rem;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: -220px; /* oculto por defecto */
+      transition: left 0.3s ease;
+      z-index: 1000;
+      box-sizing: border-box;
     }
-    nav a {
+    nav.visible { left: 0; }
+
+    nav button {
+      background: #2a5298;
+      border: none;
       color: #fff;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
+      padding: 1rem;
+      margin: 0.5rem 0;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 6px;
+      transition: transform 0.2s, background 0.3s;
     }
-    nav a:hover {
-      text-decoration: underline;
+    nav button:hover { background: #ffdd57; color: #111; transform: scale(1.05); }
+    nav button.active { background: #ffc107; color: #111; transform: scale(1.1); }
+
+    /* Contenido */
+    main {
+      margin-left: 20px;
+      padding: 2rem;
+      flex: 1;
+      transition: margin-left 0.3s ease;
+      max-width: 100%;
+      box-sizing: border-box;
     }
+    nav.visible ~ main { margin-left: 220px; }
+
     section {
-      padding: 40px;
+      display: none;
+      animation: fadeIn 0.5s ease;
       text-align: center;
+      min-height: 60vh;
+      padding: 2rem;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      max-width: 100%;
+      box-sizing: border-box;
     }
-    section h2 {
-      color: #1abc9c;
-      margin-bottom: 20px;
+    section.active { display: block; }
+    section h2 { color: #2a5298; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 100%;
+      margin: auto;
+      box-sizing: border-box;
     }
     .card {
-      background: #2c3e50;
+      background: #f9f9f9;
       border-radius: 10px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 600px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 2rem;
+      transition: transform 0.3s;
+      max-width: 100%;
+      box-sizing: border-box;
+      cursor: pointer;
     }
-    .card h3 {
-      margin-top: 0;
-      color: #f39c12;
-    }
+    .card:hover { transform: translateY(-5px); }
+
     footer {
-      background: #1abc9c;
       text-align: center;
-      padding: 15px;
-      margin-top: 30px;
+      padding: 2rem;
+      background: #111;
+      color: #fff;
+      border-radius: 10px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+  <!-- Botón menú -->
+  <button id="toggleMenu">☰ Menú</button>
+  <!-- Botón música -->
+  <button id="musicBtn">🎵 Activar Música</button>
 
-  <header>
-    <h1>⚡ Taller COSTALES ⚡</h1>
-    <p>Reparación y optimización de vehículos eléctricos y baterías de litio/LiFePO₄</p>
-  </header>
+  <!-- Audio de fondo -->
+  <audio id="bgMusic" loop>
+    <source src="fondo.ogg" type="audio/ogg">
+    <source src="fondo.mp3" type="audio/mpeg">
+  </audio>
 
-  <nav>
-    <a href="#servicios">Servicios</a>
-    <a href="#contacto">Contacto</a>
-    <a href="#nosotros">Nosotros</a>
+  <!-- Audio de toque -->
+  <audio id="clickSound">
+    <source src="click.ogg" type="audio/ogg">
+    <source src="click.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Menú vertical -->
+  <nav id="menu">
+    <button onclick="mostrar('inicio', event)" class="active">Inicio</button>
+    <button onclick="mostrar('servicios', event)">Servicios</button>
+    <button onclick="mostrar('tienda', event)">Tienda</button>
+    <button onclick="mostrar('contacto', event)">Contacto</button>
   </nav>
 
-  <section id="servicios">
-    <h2>🔧 Nuestros Servicios</h2>
-    <div class="card">
-      <h3>Reparación de Vehículos Eléctricos</h3>
-      <p>Diagnóstico completo, reparación de motores, controladores y sistemas de carga.</p>
-    </div>
-    <div class="card">
-      <h3>Reparación de Baterías de Litio y LiFePO₄</h3>
-      <p>Balanceo de celdas, reemplazo de módulos, adaptación de BMS y optimización de rendimiento.</p>
-    </div>
-    <div class="card">
-      <h3>Consultoría Técnica</h3>
-      <p>Asesoría en proyectos de conversión, mantenimiento preventivo y capacitación comunitaria.</p>
-    </div>
-  </section>
+  <!-- Contenido -->
+  <main>
+    <section id="inicio" class="active">
+      <h2>Bienvenido</h2>
+      <p>Innovación y resiliencia en soluciones técnicas adaptadas a tu realidad.</p>
+    </section>
 
-  <section id="nosotros">
-    <h2>👨‍🔧 Sobre Taller COSTALES</h2>
-    <p>Somos un equipo apasionado por la innovación y la energía limpia. 
-       Nuestro objetivo es extender la vida útil de tus baterías y vehículos eléctricos 
-       con soluciones prácticas y seguras.</p>
-  </section>
+    <section id="servicios">
+      <h2>Nuestros Servicios</h2>
+      <div class="cards" id="cards-servicios">
+        <div class="card"><h3>🔋 Reparación de Baterías</h3><p>Balanceo de celdas y adaptación de BMS.</p></div>
+        <div class="card"><h3>⚡ Adaptación de Hardware</h3><p>Optimización de sistemas eléctricos.</p></div>
+        <div class="card"><h3>🚗 Mantenimiento de Vehículos</h3><p>Servicio integral para eléctricos e híbridos.</p></div>
+        <div class="card"><h3>📚 Consultoría Técnica</h3><p>Capacitación y asesoría comunitaria.</p></div>
+      </div>
+    </section>
 
-  <section id="contacto">
-    <h2>📞 Contáctanos</h2>
-    <p>Email: contacto@tallercostales.com</p>
-    <p>Teléfono: +53 555-12345</p>
-    <p>Dirección: Calle Principal #123, Güines, Mayabeque</p>
-  </section>
+    <section id="tienda">
+      <h2>Tienda</h2>
+      <div class="cards" id="cards-tienda">
+        <div class="card"><h3>🔌 Cargadores</h3><p>Adaptados a distintos voltajes.</p></div>
+        <div class="card"><h3>🔋 Módulos de Batería</h3><p>Li-ion y LiFePO4 disponibles.</p></div>
+        <div class="card"><h3>⚙️ Adaptadores y BMS</h3><p>Gestión segura y eficiente.</p></div>
+      </div>
+    </section>
 
-  <footer>
-    <p>© 2025 Taller COSTALES | Energía limpia para un futuro mejor</p>
-  </footer>
+    <section id="contacto">
+      <h2>Contacto</h2>
+      <p>📍 Calle Principal #123, Güines, Mayabeque, Cuba</p>
+      <p>📞 +53 5 123 4567</p>
+      <p>✉️ contacto@tallercostales.com</p>
+    </section>
 
+    <footer>
+      <p>© 2025 Taller COSTALES - Innovación con propósito</p>
+    </footer>
+  </main>
+
+  <script>
+    const toggleBtn = document.getElementById("toggleMenu");
+    const menu = document.getElementById("menu");
+    const musicBtn = document.getElementById("musicBtn");
+    const bgMusic = document.getElementById("bgMusic");
+    const clickSound = document.getElementById("clickSound");
+    let playing = false;
+
+    // Reproduce el sonido de toque
+    function playClick() {
+      try {
+        clickSound.currentTime = 0;
+        clickSound.play();
+      } catch (err) {
+        // Algunos navegadores pueden requerir interacción previa
+        console.log("Click sound no pudo reproducirse:", err);
+      }
+    }
+
+    // Mostrar/ocultar menú
+    toggleBtn.addEventListener("click", () => {
+      menu.classList.toggle("visible");
+      if (menu.classList.contains("visible")) {
+        toggleBtn.style.left = "220px";
+      } else {
+        toggleBtn.style.left = "20px";
+      }
+      playClick();
+    });
+
+    // Activar/pausar música
+    musicBtn.addEventListener("click", async () => {
+      try {
+        if (!playing) {
+          await bgMusic.play();
+          playing = true;
+          musicBtn.textContent = "⏸️ Pausar Música";
+        } else {
+          bgMusic.pause();
+          playing = false;
+          musicBtn.textContent = "🎵 Activar Música";
+        }
+      } catch (err) {
+        console.log("No se pudo reproducir el audio:", err);
+      }
+      playClick();
+    });
+
+    // Mostrar sección y autocerrar menú
+    function mostrar(id, e) {
+      // Activar sección correspondiente
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      // Activar botón seleccionado
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
+      if (e && e.target) {
+        e.target.classList.add("active");
+      }
+
+      // Ocultar menú automáticamente y recolocar el botón
+      menu.classList.remove("visible");
+      toggleBtn.style.left = "20px";
+
+      playClick();
+    }
+
+    // Sonido al tocar cualquier tarjeta
+    document.querySelectorAll(".card").forEach(card => {
+      card.addEventListener("click", () => {
+        playClick();
+      });
+    });
+
+    // Opcional: sonido al tocar cualquier enlace dentro del contenido
+    document.querySelectorAll("main a").forEach(a => {
+      a.addEventListener("click", () => {
+        playClick();
+      });
+    });
+  </script>
 </body>
 </html>
